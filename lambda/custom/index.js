@@ -8,27 +8,102 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speechText = 'Welcome to the Alexa Skills Kit, you can say hello!';
+    const speechText = 'This is the karaoke template!';
+
+    if (!supportsAPL(handlerInput)) {
+      return handlerInput.responseBuilder
+        .speak("This is an echo device without a screen!")
+        .getResponse();
+    }
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(speechText)
-      .withSimpleCard('Hello World', speechText)
-      .getResponse();
-  },
-};
-
-const HelloWorldIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'HelloWorldIntent';
-  },
-  handle(handlerInput) {
-    const speechText = 'Hello World!';
-
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .addDirective({
+        type: 'Alexa.Presentation.APL.RenderDocument',
+        token: 'karaokeToken',
+        version: '1.0',
+        document: require('./karaoke.json'),
+        datasources: {
+          "karaokeTemplateData": {
+              "type": "object",
+              "objectId": "karaokeSample",
+              "properties": {
+                  "karaokeSsml": "<speak>Here are the best cheeses of the World. </speak>",
+                  "goudaSsml": "<speak>Gouda</speak>",
+                  "cheddarSsml": "<speak>Sharp Cheddar</speak>",
+                  "blueSsml": "<speak>Blue</speak>",
+                  "brieSsml": "<speak>Brie</speak>",
+                  "sharpcheddarSsml": "<speak>Sharp Chedda</speak>",
+                  "blueSsml": "<speak>Blue</speak>",
+                  "brieSsml": "<speak>Brie</speak>",
+                  "hintString" : "try the blue cheese!"
+              },
+              "transformers": [
+                  {
+                    "inputPath": "karaokeSsml",
+                    "outputName": "karaokeSpeech",
+                    "transformer": "ssmlToSpeech"
+                  },
+                  {
+                    "inputPath": "karaokeSsml",
+                    "outputName": "karaokeText",
+                    "transformer": "ssmlToText"
+                  },
+                  {
+                    "inputPath": "goudaSsml",
+                    "outputName": "goudaSpeech",
+                    "transformer": "ssmlToSpeech"
+                  },
+                  {
+                    "inputPath": "cheddarSsml",
+                    "outputName": "cheddarSpeech",
+                    "transformer": "ssmlToSpeech"
+                  },
+                  {
+                    "inputPath": "blueSsml",
+                    "outputName": "blueSpeech",
+                    "transformer": "ssmlToSpeech"
+                  },
+                  {
+                    "inputPath": "brieSsml",
+                    "outputName": "brieSpeech",
+                    "transformer": "ssmlToSpeech"
+                  }
+              ]
+          }
+      }
+    })
+      .addDirective({
+        type: 'Alexa.Presentation.APL.ExecuteCommands',
+        token: 'karaokeToken',
+        commands: [
+          {
+            type: 'SpeakItem',
+            componentId: 'karaokespeechtext',
+            highlightMode: 'line'
+          },
+          {
+            type: 'SpeakItem',
+            componentId: 'gouda',
+            highlightMode: 'line'
+          },
+          {
+            type: 'SpeakItem',
+            componentId: 'sharpcheddar',
+            highlightMode: 'line'
+          },
+          {
+            type: 'SpeakItem',
+            componentId: 'blue',
+            highlightMode: 'line'
+          },
+          {
+            type: 'SpeakItem',
+            componentId: 'brie',
+            highlightMode: 'line'
+          }
+        ]
+      })
       .getResponse();
   },
 };
@@ -90,12 +165,18 @@ const ErrorHandler = {
   },
 };
 
+function supportsAPL(handlerInput) {
+  const supportedInterfaces = handlerInput.requestEnvelope.context.System.device.supportedInterfaces;
+  const aplInterface = supportedInterfaces['Alexa.Presentation.APL'];
+  return aplInterface != null && aplInterface != undefined;
+}
+
+
 const skillBuilder = Alexa.SkillBuilders.custom();
 
 exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
-    HelloWorldIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler

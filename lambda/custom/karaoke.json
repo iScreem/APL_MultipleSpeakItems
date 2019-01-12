@@ -1,0 +1,100 @@
+{
+    "type": "APL",
+    "version": "1.0",
+    "import": [
+        {
+            "name": "alexa-viewport-profiles",
+            "version": "1.0.0"
+        }
+    ],
+    "layouts": {
+        "CheeseHeader": {
+            "parameters": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ],
+            "items": [
+                {
+                    "type": "Text",
+                    "text": "${title}"
+                }
+            ]
+        }
+    },
+    "mainTemplate": {
+        "parameters": [
+            "payload"
+        ],
+        "item": [
+            {
+                "type": "Container",
+                "direction": "column",
+                "width": "100vw",
+                "height": "100vh",
+                "items": [
+                    {
+                        "type": "Text",
+                        "id": "karaokespeechtext",
+                        "text": "Here are the best cheeses of the world", 
+                        "speech": "${payload.karaokeTemplateData.properties.karaokeSpeech}",
+                        "fontSize": "55px",
+                        "color": "#ffffff",
+                        "paddingLeft": "30px",
+                        "paddingTop": "30px",
+                        "fontWeight": 300
+                    },
+                    {
+                        "type": "Text",
+                        "text": "Gouda",
+                        "id": "gouda",
+                        "speech": "${payload.karaokeTemplateData.properties.goudaSpeech}",
+                        "fontSize": "40px",
+                        "color": "#ffffff",
+                        "width": "100vw",
+                        "heigth": "15vh",
+                        "paddingLeft": "60px",
+                        "fontWeight": 200
+                    },
+                    {
+                        "type": "Text",
+                        "text": "Sharp Cheddar",
+                        "id": "sharpcheddar",
+                        "speech": "${payload.karaokeTemplateData.properties.cheddarSpeech}",
+                        "fontSize": "40px",
+                        "color": "#ffffff",
+                        "width": "100vw",
+                        "heigth": "15vh",
+                        "paddingLeft": "60px",
+                        "fontWeight": 200
+                    },
+                    {
+                        "type": "Text",
+                        "text": "Blue",
+                        "id": "blue",
+                        "speech": "${payload.karaokeTemplateData.properties.blueSpeech}",
+                        "fontSize": "40px",
+                        "color": "#ffffff",
+                        "width": "100vw",
+                        "heigth": "15vh",
+                        "paddingLeft": "60px",
+                        "fontWeight": 200
+                    },
+                    {
+                        "type": "Text",
+                        "text": "Brie",
+                        "id": "brie",
+                        "speech": "${payload.karaokeTemplateData.properties.brieSpeech}",
+                        "fontSize": "40px",
+                        "color": "#ffffff",
+                        "width": "100vw",
+                        "heigth": "15vh",
+                        "paddingLeft": "60px",
+                        "fontWeight": 200
+                    }
+                ]
+            }
+        ]
+    }
+}
